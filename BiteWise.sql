@@ -83,6 +83,7 @@ VALUES ('anna.persson@example.com', 'Anna', 'Persson'),
         'Linnea',
         'Sjöberg'
     );
+
 INSERT INTO ingredients (
         ingredient_type,
         brand,
@@ -91,6 +92,7 @@ INSERT INTO ingredients (
         is_vegan,
         standard_unit
     )
+
 VALUES ('Mellanmjölk', 'Arla', 45, 3, FALSE, 'Liter'),
     ('Havregryn', 'AXA', 370, 13, TRUE, 'Gram'),
     ('Ägg', 'Kronägg', 140, 12, FALSE, 'Piece'),
@@ -108,6 +110,7 @@ VALUES ('Mellanmjölk', 'Arla', 45, 3, FALSE, 'Liter'),
     ('Olivolja', 'Zeta', 880, 0, TRUE, 'Liter'),
     ('Lök', 'ICA', 40, 1, TRUE, 'Piece'),
     ('Röda linser', 'GoGreen', 350, 24, TRUE, 'Gram');
+
 INSERT INTO fridge_inventories (user_ID, ingredient_ID, amount, best_before_date)
 VALUES (1, 1, 1, '2026-05-10'),
     (1, 3, 6, '2026-05-15'),
@@ -119,6 +122,7 @@ VALUES (1, 1, 1, '2026-05-10'),
     (7, 8, 1, '2027-03-15'),
     (8, 9, 5, '2026-05-25'),
     (9, 10, 1000, '2027-08-12');
+
 INSERT INTO recipes (
         title,
         recipe_creator,
@@ -239,20 +243,23 @@ VALUES (1, 1, '2026-05-01'),
     (7, 8, '2026-05-04'),
     (8, 9, '2026-05-05'),
     (9, 6, '2026-05-05');
+
 -- Recipes user can't make.
 SELECT DISTINCT *
 FROM recipe_ingredients ri
     LEFT JOIN fridge_inventories fi ON ri.ingredient_ID = fi.ingredient_ID
 WHERE fi.ingredient_ID IS NULL
     AND fi.user_ID = 1;
--- Calculate nutriants
+
+-- Calculate nutrients
 SELECT ri.recipe_ID,
     SUM(i.kcal_per_100g / 100 * ri.required_amount),
     SUM(i.protein_per_100g / 100 * ri.required_amount)
 FROM recipe_ingredients ri
     INNER JOIN ingredients i ON ri.ingredient_ID = i.ingredient_ID
 GROUP BY ri.recipe_ID;
--- Get recipes for products that will go bad.
+
+-- Get recipes for products that will go bad soon.
 SELECT DISTINCT ri.recipe_ID,
     r.title
 FROM fridge_inventories fi
@@ -260,12 +267,52 @@ FROM fridge_inventories fi
     INNER JOIN recipes r ON r.recipe_ID = ri.recipe_ID
 WHERE fi.best_before_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + 2
     AND fi.user_ID = 4;
--- Trigger
-delimiter // CREATE TRIGGER check_best_before_date BEFORE
+
+-- Compare fridgeinventory with recipe to make shoppinglist --
+SELECT i.ingredient_type, (ri.required_amount - COALESCE(fi.amount, 0)) AS amount_to_buy, i.standard_unit 
+FROM recipe_ingredients ri
+INNER JOIN ingredients i ON ri.ingredient_ID = i.ingredient_ID
+LEFT JOIN fridge_inventories fi 
+ON ri.ingredient_ID = fi.ingredient_ID 
+AND fi.user_ID = 1
+WHERE ri.recipe_ID = 5
+AND (fi.amount IS NULL OR fi.amount < ri.required_amount);
+
+-- recipes users can make that match what they have in their fridge inventory
+SELECT r.recipe_ID, r.title, r.prep_time FROM Recipes r
+WHERE NOT EXISTS(SELECT * FROM recipe_ingredients ri LEFT JOIN fridge_inventories fi
+ON ri.ingredient_ID = fi.ingredient_ID AND fi.user_ID = 1
+WHERE ri.recipe_ID = r.recipe_ID
+AND (fi.amount IS NULL OR fi.amount < ri.required_amount));
+
+-- daily check for makro goal
+SELECT mpr.planned_date, mp.target_calories,
+SUM(i.kcal_per_100g * ri.required_amount / 100) AS planned_calories, mp.target_protein,
+SUM(i.protein_per_100g * ri.required_amount / 100) AS planned_proteins
+FROM meal_plan_recipe mpr
+INNER JOIN meal_plans mp ON mpr.meal_plan_ID = mp.meal_plan_ID
+INNER JOIN recipes r ON mpr.recipe_ID = r.recipe_ID
+INNER JOIN recipe_ingredients ri ON r.recipe_ID = ri.recipe_ID
+INNER JOIN ingredients i ON ri.ingredient_ID = i.ingredient_ID
+WHERE mp.user_ID = 1 AND MPR.planned_date = '2026-05-01'
+GROUP BY mpr.planned_date, mp.target_calories, mp.target_protein;
+
+-- filter vegan recipes
+SELECT r.recipe_ID, r.title
+FROM recipes r
+WHERE NOT EXISTS(SELECT* FROM recipe_ingredients ri
+INNER JOIN ingredients i ON ri.ingredient_ID = i.ingredient_ID
+WHERE ri.recipe_ID = r.recipe_ID AND i.is_vegan = FALSE);
+
+-- Trigger --
+delimiter //
+CREATE TRIGGER check_best_before_date BEFORE
 INSERT ON fridge_inventories FOR EACH ROW BEGIN IF NEW.best_before_date < CURDATE() THEN SIGNAL SQLSTATE '45000'
 SET MESSAGE_TEXT = "Varans bäst före-datum har redan varit!";
 END IF;
 END;
 delimiter;
-INSERT INTO Users (email, first_name, last_name)
-VALUES ("albin@gmail.com", "Albin", "Holgersson")
+INSERT INTO fridge_inventories (user_ID, ingredient_ID, amount, best_before_date)
+VALUES (1, 1, 1, '2026-05-01');
+
+-- Function --
