@@ -1,0 +1,27 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.login-box {
+    background-color: rgb(255, 176, 30);
+    padding: 25px;
+}
+
+.register-box {
+    background-color: rgb(255, 176, 30);
+    padding: 25px;
+}
+
+input {
+    padding: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.error {
+    color: red;
+}

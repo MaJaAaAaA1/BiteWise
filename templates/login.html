@@ -5,10 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BiteWise - Login</title>
-
+    <link rel="stylesheet" href="/static/login.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
+    {% include 'nav.html' %}
+
     <div class="wrapper">
         <div class="login-box">
             <h1>Login</h1>
@@ -18,9 +21,9 @@
                 <label for="password">Password</label><br>
                 <input type="password" id="password" name="password" value="******"><br>
                 <input type="submit" value="Submit">
-
             </form>
-
+            <p>Go to <a href="/register">register</a></p>
+            <p class="error">{{error}}</p>
 
         </div>
     </div>

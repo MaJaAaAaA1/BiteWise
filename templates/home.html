@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BiteWise</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
-    <nav>
-        <button></button>
-    </nav>
+    {% include 'nav.html' %}
     <h1>hejsan {{person}} </h1>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae cumque veniam voluptate, cupiditate excepturi harum, numquam praesentium, quis dolore facilis aliquam quo reiciendis sed. Iusto deserunt aliquid explicabo veniam quibusdam!</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae cumque veniam voluptate, cupiditate excepturi
+        harum, numquam praesentium, quis dolore facilis aliquam quo reiciendis sed. Iusto deserunt aliquid explicabo
+        veniam quibusdam!</p>
     <div id="box" onclick="clickbox()">
 
     </div>
+
+    {% include 'footer.html' %}
+
     <script src="/static/test.js"></script>
 </body>
+
 </html>

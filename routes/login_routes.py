@@ -1,38 +1,7 @@
 import database
-import os
-from dotenv import load_dotenv
 from flask import Flask, render_template, url_for, request, redirect, session
 
-load_dotenv()
 app = Flask(__name__)
-
-app.secret_key = f'{os.getenv("SESSION_SECRET_KEY")}'.encode()
-
-### Middlewares ###
-
-# Log 
-@app.before_request
-def log_request():
-    print("\033[34m", f"Method: {request.method}\nURL: {request.url}", "\033[0m")
-
-# Session
-@app.before_request
-def check_session():
-    if request.endpoint not in ["static", "login", "register", "home_page"]: # List of places where you don't need to be logged in
-        if 'email' not in session:
-            return redirect(url_for("login")) # Send to login
-
-### Routes ###
-
-# Base route
-@app.route("/")
-def home_page():
-    return "<p>Hello, World!</p>"
-
-# Test route
-@app.route("/home")
-def home():
-    return render_template("home.html", person="Albin")
 
 # Login route
 @app.route("/login", methods=['GET', 'POST'])
@@ -41,7 +10,7 @@ def login():
         if database.doesUserExist(request.form['email']):
             # Check password
             session['email'] = request.form['email'] # Add user to session
-            return redirect(url_for("home")) # Send to defualt page for login
+            return redirect(url_for("test")) # Send to defualt page for login
         else:
             return render_template("login.html", error="User does not exist!")
     
@@ -58,7 +27,7 @@ def register():
             if request.form['email'] and request.form['fname'] and request.form['lname']:
                 database.addUser(request.form['email'], request.form['fname'], request.form['lname'])
                 session['email'] = request.form['email'] # Add user to session
-                return redirect(url_for("home")) # Send to defualt page for login
+                return redirect(url_for("test")) # Send to defualt page for login
         
     return render_template("register.html")
 
@@ -66,8 +35,3 @@ def register():
 def logout():
     session.pop('email', None)
     return redirect(url_for('home_page')) # Send back to home page
-
-@app.route("/clear")
-def clear():
-    [session.pop(key) for key in list(session.keys())]
-    return redirect(url_for("home_page")) # Send to defualt page for login
