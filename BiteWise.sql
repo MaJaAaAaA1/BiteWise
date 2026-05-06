@@ -261,11 +261,11 @@ FROM fridge_inventories fi
 WHERE fi.best_before_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + 2
     AND fi.user_ID = 4;
 -- Trigger
-delimiter CREATE TRIGGER check_best_before_date BEFORE
+delimiter // CREATE TRIGGER check_best_before_date BEFORE
 INSERT ON fridge_inventories FOR EACH ROW BEGIN IF NEW.best_before_date < CURDATE() THEN SIGNAL SQLSTATE '45000'
 SET MESSAGE_TEXT = "Varans bäst före-datum har redan varit!";
 END IF;
 END;
 delimiter;
-INSERT INTO fridge_inventories (user_ID, ingredient_ID, amount, best_before_date)
-VALUES (1, 1, 1, '2026-05-01');
+INSERT INTO Users (email, first_name, last_name)
+VALUES ("albin@gmail.com", "Albin", "Holgersson")

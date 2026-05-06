@@ -13,14 +13,14 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-def badRecipe():
-    mycursor.execute("""SELECT DISTINCT ri.recipe_ID,
+def badRecipe(user):
+    mycursor.execute(f"""SELECT DISTINCT ri.recipe_ID,
         r.title
     FROM fridge_inventories fi
         INNER JOIN recipe_ingredients ri ON ri.ingredient_ID = fi.ingredient_ID
         INNER JOIN recipes r ON r.recipe_ID = ri.recipe_ID
     WHERE fi.best_before_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + 2
-        AND fi.user_ID = 4;""")
+        AND fi.user_ID = {user};""")
     return mycursor.fetchall()
 
 def calculateNutrients():
@@ -32,15 +32,23 @@ def calculateNutrients():
     GROUP BY ri.recipe_ID;""")
     return mycursor.fetchall()
 
-def unavailableRecipes():
-    mycursor.execute("""SELECT DISTINCT *
+def unavailableRecipes(user):
+    mycursor.execute(f"""SELECT DISTINCT *
 FROM recipe_ingredients ri
     LEFT JOIN fridge_inventories fi ON ri.ingredient_ID = fi.ingredient_ID
 WHERE fi.ingredient_ID IS NULL
-    AND fi.user_ID = 1;""")
+    AND fi.user_ID = {user};""")
     return mycursor.fetchall()
 
+def doesUserExist(email):
+    mycursor.execute(f"""SELECT EXISTS(
+        SELECT 1
+        FROM Users
+        WHERE Users.email = '{email}'
+    )""")
+    return mycursor.fetchall()[0][0]
 
-
-# for x in mycursor:
-#   print(x)
+def addUser(email, fname, lname):
+    mycursor.execute(f"""INSERT INTO Users (email, first_name, last_name)
+                        VALUES ("{email}", "{fname}", "{lname}");""")
+    mydb.commit()
