@@ -79,6 +79,27 @@ def checkDailyMacros(user_id, planned_date):
     mycursor.execute(sql, (user_id, planned_date))
 
 # filter vegan recipes
+def getAllRecipes():
+    sql = """SELECT title,
+    recipe_creator,
+    prep_time,
+    recipe_ID
+    FROM recipes;"""
+    mycursor.execute(sql)
+    return mycursor.fetchall()
+
+def getRecipeById(recipeID):
+    sql = """SELECT title,
+    recipe_creator,
+    prep_time,
+    instructions
+    FROM recipes
+    WHERE recipe_ID = %s;"""
+    value = tuple((str(recipeID)))
+    mycursor.execute(sql, value)
+    return mycursor.fetchall()
+
+# filter vegan recipes
 def getVeganRecipes():
     sql = """SELECT r.recipe_ID, r.title
     FROM recipes r

@@ -1,7 +1,7 @@
 import database
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, url_for, request, redirect, session
+from flask import Flask, render_template, url_for, request, redirect, session, jsonify
 
 load_dotenv()
 app = Flask(__name__)
@@ -33,6 +33,19 @@ def home_page():
 @app.route("/home")
 def home():
     return render_template("home.html", person="Albin")
+
+# Recipes route
+@app.route("/recipes")
+def recipes():
+    return render_template("recipes.html")
+
+# Recipes route
+@app.route("/recipes/recipe")
+def recipe():
+    if int(request.args.get("recipeid")):
+        data = database.getRecipeById(int(request.args.get("recipeid")))
+        return render_template("recipe.html", title=data[0][0], creator=data[0][1], time=data[0][2], instructions=data[0][3])
+    return redirect(url_for("recipes"))
 
 # Login route
 @app.route("/login", methods=['GET', 'POST'])
@@ -71,3 +84,14 @@ def logout():
 def clear():
     [session.pop(key) for key in list(session.keys())]
     return redirect(url_for("home_page")) # Send to defualt page for login
+
+### Data Routes ###
+
+@app.route("/getRecipes")
+def getRecipes():
+    data = database.getAllRecipes()
+    for i in range(0, len(data)):
+        data[i] = list(data[i])
+        data[i][2] = str(data[i][2])
+    print(data[0][2])
+    return jsonify(data)
