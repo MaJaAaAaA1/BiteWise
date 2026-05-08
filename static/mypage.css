@@ -1,0 +1,62 @@
+.mypage-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.fridge-box {
+    height: 900px;
+    display: flex;
+}
+
+.fridge-list {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 500px;
+    background-color: lightgray;
+}
+
+.fridge-items {
+    border: 1px solid grey;
+    height: 100%;
+}
+
+.fridge-item {
+    display: grid;
+    grid-template-columns: auto auto;
+    height: 25px;
+    background-color: grey;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.fridge-item-bbd {
+    font-size: 11px;
+}
+
+.fridge-item:hover {
+    background-color: grey;
+}
+
+.add-to-fridge-box {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.fridge-form {}
+
+.meal-box {
+    height: 900px;
+}
+
+.push {
+    margin-left: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.expand {
+    height: 50px !important;
+}

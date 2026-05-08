@@ -89,13 +89,25 @@ def getAllRecipes():
     return mycursor.fetchall()
 
 def getRecipeById(recipeID):
-    sql = """SELECT title,
-    recipe_creator,
-    prep_time,
-    instructions
-    FROM recipes
-    WHERE recipe_ID = %s;"""
-    value = tuple((str(recipeID)))
+    sql = """SELECT r.title,
+    r.recipe_creator,
+    r.prep_time,
+    r.instructions,
+    GROUP_CONCAT(ai.ingredient_type) AS ingredients,
+    GROUP_CONCAT(ai.standard_unit) AS unit,
+    GROUP_CONCAT(ai.required_amount) AS amount
+    FROM recipes r
+    JOIN (
+    SELECT i.ingredient_type,
+    ri.recipe_ID,
+    ri.required_amount,
+    i.standard_unit
+    FROM ingredients i
+    INNER JOIN recipe_ingredients ri ON ri.ingredient_ID = i.ingredient_ID
+    WHERE i.ingredient_ID = ri.ingredient_ID
+    ) ai ON ai.recipe_ID = %s
+    WHERE r.recipe_ID = %s;"""
+    value = tuple((str(recipeID), str(recipeID)))
     mycursor.execute(sql, value)
     return mycursor.fetchall()
 
@@ -127,5 +139,29 @@ def addIngredientToFridge(user_id, ingredient_id, amount, best_before_date):
     sql = """INSERT INTO fridge_inventories (user_ID, ingredient_ID, amount, best_before_date)
         VALUES (%s, %s, %s, %s)"""
     values = (user_id, ingredient_id, amount, best_before_date)
-    mycursor.execute(sql, values)
-    mydb.commit()
+    try:
+        mycursor.execute(sql, values)
+        mydb.commit()
+        return "Completed successfully!"
+    except Exception as e:
+        return e
+    
+
+def getFridgeInventoryById(user_id):
+    sql = """SELECT i.ingredient_type,
+    i.standard_unit,
+    fi.amount,
+    fi.best_before_date
+    FROM fridge_inventories fi
+    INNER JOIN ingredients i ON fi.ingredient_ID = i.ingredient_ID
+    WHERE fi.user_ID = %s;"""
+    value = tuple((str(user_id)))
+    mycursor.execute(sql, value)
+    return mycursor.fetchall()
+
+def getAllIngredients():
+    sql = """SELECT ingredient_ID,
+    ingredient_type
+    FROM ingredients"""
+    mycursor.execute(sql)
+    return mycursor.fetchall()

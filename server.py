@@ -39,13 +39,18 @@ def home():
 def recipes():
     return render_template("recipes.html")
 
-# Recipes route
+# Recipe route
 @app.route("/recipes/recipe")
 def recipe():
     if int(request.args.get("recipeid")):
         data = database.getRecipeById(int(request.args.get("recipeid")))
-        return render_template("recipe.html", title=data[0][0], creator=data[0][1], time=data[0][2], instructions=data[0][3])
+        return render_template("recipe.html", title=data[0][0], creator=data[0][1], time=data[0][2], instructions=data[0][3], ingredients=data[0][4], units=data[0][5], amounts=data[0][6])
     return redirect(url_for("recipes"))
+
+# MyPage route
+@app.route("/mypage")
+def myPage():
+    return render_template("mypage.html")
 
 # Login route
 @app.route("/login", methods=['GET', 'POST'])
@@ -95,3 +100,25 @@ def getRecipes():
         data[i][2] = str(data[i][2])
     print(data[0][2])
     return jsonify(data)
+
+@app.route("/getFrigdeInventory")
+def getFrigdeInventory():
+    data = database.getFridgeInventoryById(int(request.args.get("userid")))
+    return jsonify(data)
+
+@app.route("/getAllIngredients")
+def getAllIngredients():
+    data = database.getAllIngredients()
+    return jsonify(data)
+
+@app.route("/addIngredient", methods=["POST"])
+def addIngredient():
+    try:
+        userId = request.form["userid"]
+        ingredientId = request.form["ingredientId"]
+        amount = request.form["amount"]
+        bestBeforeDate = request.form["bestBeforeDate"]
+    except:
+        return jsonify("Not enough data!")
+    message = database.addIngredientToFridge(userId, ingredientId, amount, bestBeforeDate)
+    return jsonify(message)

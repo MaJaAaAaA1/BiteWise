@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitewise</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/mypage.css">
+</head>
+
+<body>
+
+    {% include 'nav.html' %}
+
+    <div class="mypage-grid">
+        <div class="fridge-box">
+            <div class="fridge-list">
+                <h3>Fridge Items:</h3>
+                <div class="fridge-items" id="fridgeItems">
+                </div>
+            </div>
+
+            <div class="add-to-fridge">
+                <div class="add-to-fridge-box">
+                    <form name="addToFrigde" action="/addIngredient" class="fridge-form" id="frigdeForm" method="post">
+                        <label for="type">Type</label><br>
+                        <div id="radioTypes">
+
+                        </div>
+                        <label for="amount">Amount</label>
+                        <input type="text" name="amount" id="amount"><br>
+                        <label for="bestBeforeDate">Best before date</label>
+                        <input type="text" name="bestBeforeDate" id="bestBeforeDate"><br>
+                        <input type="submit" name="submit" id="fridge-submit">
+                        <input name="grant_type" type="hidden" value="password">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="meal-box">
+
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script src="/static/frigdeItems.js" async></script>
+</body>
+
+</html>
