@@ -12,6 +12,15 @@
 <body>
     {% include 'nav.html' %}
 
+    <div class="filter-items">
+        <select name="filter" id="filter">
+            <option value="all">All</option>
+            <option value="doable">Doable</option>
+            <option value="vegan">Vegan</option>
+        </select>
+        <button onclick="updateRecipeList()">Update</button>
+    </div>
+
     <div class="recipe-grid" id="recipeGrid">
 
     </div>

@@ -47,3 +47,28 @@ function createRecipeBox(grid, title, creator, preptime, recipeID) {
 
   grid.appendChild(recipeBox);
 }
+
+const updateRecipeList = () => {
+  const selection = document.getElementById("filter");
+  const selectedOption = selection.value;
+  var url = "";
+
+  if (selectedOption === "all") {
+    url = "/getRecipes";
+  } else if (selectedOption === "doable") {
+    url = "/getRecipesDoable";
+  } else if (selectedOption === "vegan") {
+    url = "/getRecipesVegan";
+  }
+
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      // Delete all existing children
+      grid.replaceChildren();
+
+      data.forEach((e) => {
+        createRecipeBox(grid, e[0], e[1], e[2], e[3]);
+      });
+    });
+};

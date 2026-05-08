@@ -55,7 +55,7 @@ def generateShoppingList(user_id, recipe_id):
 
 # recipes users can make that match what they have in their fridge inventory
 def getCookableRecipes(user_id):
-    sql = """SELECT r.recipe_ID, r.title, r.prep_time FROM Recipes r
+    sql = """SELECT r.title, r.recipe_creator, r.prep_time, r.recipe_ID FROM Recipes r
     WHERE NOT EXISTS(SELECT * FROM recipe_ingredients ri LEFT JOIN fridge_inventories fi
     ON ri.ingredient_ID = fi.ingredient_ID AND fi.user_ID = %s
     WHERE ri.recipe_ID = r.recipe_ID
@@ -107,13 +107,13 @@ def getRecipeById(recipeID):
     WHERE i.ingredient_ID = ri.ingredient_ID
     ) ai ON ai.recipe_ID = %s
     WHERE r.recipe_ID = %s;"""
-    value = tuple((str(recipeID), str(recipeID)))
+    value  =(str(recipeID), str(recipeID))
     mycursor.execute(sql, value)
     return mycursor.fetchall()
 
 # filter vegan recipes
 def getVeganRecipes():
-    sql = """SELECT r.recipe_ID, r.title
+    sql = """SELECT r.title, r.recipe_creator, r.prep_time, r.recipe_ID
     FROM recipes r
     WHERE NOT EXISTS(SELECT* FROM recipe_ingredients ri
     INNER JOIN ingredients i ON ri.ingredient_ID = i.ingredient_ID
@@ -155,7 +155,7 @@ def getFridgeInventoryById(user_id):
     FROM fridge_inventories fi
     INNER JOIN ingredients i ON fi.ingredient_ID = i.ingredient_ID
     WHERE fi.user_ID = %s;"""
-    value = tuple((str(user_id)))
+    value = (user_id,)
     mycursor.execute(sql, value)
     return mycursor.fetchall()
 
@@ -164,4 +164,12 @@ def getAllIngredients():
     ingredient_type
     FROM ingredients"""
     mycursor.execute(sql)
+    return mycursor.fetchall()
+
+def getUserIdByEmail(email):
+    sql = """SELECT user_ID
+    FROM users
+    WHERE email = %s;"""
+    value = (email,)
+    mycursor.execute(sql, value)
     return mycursor.fetchall()

@@ -9,7 +9,8 @@
 # Features
 
 1. Create Meal-Plans
-2. See recipes
-3. See my Meal-Plans
-4. Add items to Frige
-5. See Frige items
+   -2. See recipes
+2. See my Meal-Plans
+   -4. Add items to Frige
+   -5. See Frige items
+   -6. Filter recipes

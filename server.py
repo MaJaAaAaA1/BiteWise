@@ -32,7 +32,8 @@ def home_page():
 # Test route
 @app.route("/home")
 def home():
-    return render_template("home.html", person="Albin")
+
+    return render_template("home.html")
 
 # Recipes route
 @app.route("/recipes")
@@ -49,7 +50,9 @@ def recipe():
 
 # MyPage route
 @app.route("/mypage")
-def myPage():
+def mypage():
+    if not request.args.get('userid'):
+        return redirect(f"/mypage?userid={session['userid'][0][0]}")
     return render_template("mypage.html")
 
 # Login route
@@ -59,7 +62,8 @@ def login():
         if database.doesUserExist(request.form['email']):
             # Check password
             session['email'] = request.form['email'] # Add user to session
-            return redirect(url_for("home")) # Send to defualt page for login
+            session['userid'] = database.getUserIdByEmail(request.form['email'])
+            return redirect(url_for("home", userid=session['userid'][0])) # Send to defualt page for login
         else:
             return render_template("login.html", error="User does not exist!")
     
@@ -101,6 +105,24 @@ def getRecipes():
     print(data[0][2])
     return jsonify(data)
 
+@app.route("/getRecipesDoable")
+def getRecipesDoable():
+    data = database.getCookableRecipes(session['userid'][0])
+    for i in range(0, len(data)):
+        data[i] = list(data[i])
+        data[i][2] = str(data[i][2])
+    print(data[0][2])
+    return jsonify(data)
+
+@app.route("/getRecipesVegan")
+def getRecipesVegan():
+    data = database.getVeganRecipes()
+    for i in range(0, len(data)):
+        data[i] = list(data[i])
+        data[i][2] = str(data[i][2])
+    print(data[0][2])
+    return jsonify(data)
+
 @app.route("/getFrigdeInventory")
 def getFrigdeInventory():
     data = database.getFridgeInventoryById(int(request.args.get("userid")))
@@ -118,7 +140,8 @@ def addIngredient():
         ingredientId = request.form["ingredientId"]
         amount = request.form["amount"]
         bestBeforeDate = request.form["bestBeforeDate"]
+        print(userId, "    ", ingredientId)
     except:
         return jsonify("Not enough data!")
     message = database.addIngredientToFridge(userId, ingredientId, amount, bestBeforeDate)
-    return jsonify(message)
+    return redirect(url_for("mypage", userid=session['userid'][0]))

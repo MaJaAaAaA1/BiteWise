@@ -358,3 +358,5 @@ SELECT i.ingredient_type,
 FROM fridge_inventories fi
     INNER JOIN ingredients i ON fi.ingredient_ID = i.ingredient_ID
 WHERE fi.user_ID = 7;
+SELECT *
+FROM users;

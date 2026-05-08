@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: auto auto auto auto;
     width: 100%;
-    margin-top: 100px;
+    margin-top: 50px;
     justify-content: center;
 }
 
@@ -34,8 +34,8 @@
     justify-content: center;
 }
 
-.recipe-title {}
-
-.recipe-creator {}
-
-.recipe-preptime {}
+.filter-items {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
