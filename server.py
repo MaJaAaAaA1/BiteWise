@@ -80,6 +80,7 @@ def register():
             if request.form['email'] and request.form['fname'] and request.form['lname']:
                 database.addUser(request.form['email'], request.form['fname'], request.form['lname'])
                 session['email'] = request.form['email'] # Add user to session
+                session['userid'] = database.getUserIdByEmail(request.form['email'])
                 return redirect(url_for("home")) # Send to defualt page for login
         
     return render_template("register.html")
@@ -160,3 +161,9 @@ def addMealPlan():
         return jsonify("Not enough data!")
     message = database.addMealPlan(userId, targetCalories, targetProteins)
     return redirect(url_for("mypage", userid=session['userid'][0]))
+
+@app.route("/getRecipeNames")
+def getRecipeNames():
+    userId = session['userid'][0][0]
+    data = database.getRecipies(userId)
+    return jsonify(data)

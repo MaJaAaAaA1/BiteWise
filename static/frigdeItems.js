@@ -1,3 +1,4 @@
+
 const fridge = document.getElementById("fridgeItems");
 const radioDiv = document.getElementById("radioTypes");
 

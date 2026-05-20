@@ -24,9 +24,22 @@ const getData = async () => {
   await fetch("/getMealPlans")
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
       data.forEach((e) => {
         createMealPlansBoxes(e[0], e[1])
       })
     })
+
+  await fetch("/getRecipeNames")
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((e) => {
+        console.log(e)
+        //createMealPlansRecipeOptions(e[0])
+      })
+    })
+    
 }
+
+document.addEventListener("DOMContentLoaded", function(){
+  getData()
+});

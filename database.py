@@ -88,7 +88,6 @@ def getAllRecipes():
     mycursor.execute(sql)
     return mycursor.fetchall()
 
-# Check this query
 def getRecipeById(recipeID):
     sql = """SELECT r.title,
     r.recipe_creator,
@@ -122,13 +121,6 @@ def getVeganRecipes():
     mycursor.execute(sql)
     return mycursor.fetchall()
 
-def getAllMealPlans(user_id):
-    sql = """SELECT target_calories, target_protein 
-    FROM meal_plans
-    WHERE user_ID = %s;"""
-    value = (user_id,)
-    mycursor.execute(sql, value)
-    return mycursor.fetchall()
 
 def doesUserExist(email):
     mycursor.execute(f"""SELECT EXISTS(
@@ -174,6 +166,14 @@ def getAllIngredients():
     mycursor.execute(sql)
     return mycursor.fetchall()
 
+def getAllMealPlans(user_id):
+    sql = """SELECT target_calories, target_protein 
+    FROM meal_plans
+    WHERE user_ID = %s;"""
+    value = (user_id,)
+    mycursor.execute(sql, value)
+    return mycursor.fetchall()
+
 def getUserIdByEmail(email):
     sql = """SELECT user_ID
     FROM users
@@ -182,6 +182,18 @@ def getUserIdByEmail(email):
     mycursor.execute(sql, value)
     return mycursor.fetchall()
 
+def addRecipeToMealplan(meal_plan_ID, recipe_ID, planned_date):
+    sql = """call add_recipe_to_mealplan( %s, %s, %s);"""
+    value = (meal_plan_ID, recipe_ID, planned_date)
+    try:
+        mycursor.execute(sql, value)
+        mydb.commit()
+        print("Recipe added to mealplan")
+
+    except mysql.connector.Error as e:
+        print(e.msg)
+        return False
+    
 def addMealPlan(user_id, targetCalories, targetProteins):
     sql = """INSERT INTO meal_plans (user_ID, target_calories, target_protein)
 VALUES (%s, %s, %s);"""
