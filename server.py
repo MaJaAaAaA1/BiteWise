@@ -140,8 +140,23 @@ def addIngredient():
         ingredientId = request.form["ingredientId"]
         amount = request.form["amount"]
         bestBeforeDate = request.form["bestBeforeDate"]
-        print(userId, "    ", ingredientId)
     except:
         return jsonify("Not enough data!")
     message = database.addIngredientToFridge(userId, ingredientId, amount, bestBeforeDate)
+    return redirect(url_for("mypage", userid=session['userid'][0]))
+
+@app.route("/getMealPlans")
+def getMealPlans():
+    data = database.getAllMealPlans(session['userid'][0][0])
+    return jsonify(data)
+
+@app.route("/addMealPlan", methods=["POST"])
+def addMealPlan():
+    try:
+        userId = session['userid'][0][0]
+        targetCalories = request.form["targetCalories"]
+        targetProteins = request.form["targetProtein"]
+    except:
+        return jsonify("Not enough data!")
+    message = database.addMealPlan(userId, targetCalories, targetProteins)
     return redirect(url_for("mypage", userid=session['userid'][0]))

@@ -88,6 +88,7 @@ def getAllRecipes():
     mycursor.execute(sql)
     return mycursor.fetchall()
 
+# Check this query
 def getRecipeById(recipeID):
     sql = """SELECT r.title,
     r.recipe_creator,
@@ -121,6 +122,13 @@ def getVeganRecipes():
     mycursor.execute(sql)
     return mycursor.fetchall()
 
+def getAllMealPlans(user_id):
+    sql = """SELECT target_calories, target_protein 
+    FROM meal_plans
+    WHERE user_ID = %s;"""
+    value = (user_id,)
+    mycursor.execute(sql, value)
+    return mycursor.fetchall()
 
 def doesUserExist(email):
     mycursor.execute(f"""SELECT EXISTS(
@@ -173,3 +181,14 @@ def getUserIdByEmail(email):
     value = (email,)
     mycursor.execute(sql, value)
     return mycursor.fetchall()
+
+def addMealPlan(user_id, targetCalories, targetProteins):
+    sql = """INSERT INTO meal_plans (user_ID, target_calories, target_protein)
+VALUES (%s, %s, %s);"""
+    values = (user_id, targetCalories, targetProteins)
+    try:
+        mycursor.execute(sql, values)
+        mydb.commit()
+        return "Completed successfully!"
+    except Exception as e:
+        return e

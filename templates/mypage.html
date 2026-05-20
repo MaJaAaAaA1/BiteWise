@@ -40,18 +40,80 @@
         </div>
 
         <div class="meal-box">
+
+            <!-- Meal plans -->
             <div class="all-meal-plans">
+                <h3>Meal Plans</h3>
 
-            </div>
-            <div>
+                <div class="meal-plan-list" id="mealPlanList">
+                    <button class="meal-plan-btn">
+                        Healthy Plan
+                    </button>
 
+                    <button class="meal-plan-btn">
+                        High Protein
+                    </button>
+
+                    <button class="meal-plan-btn">
+                        Vegetarian
+                    </button>
+                    <button class="meal-plan-btn add-meal-plan-btn" id="addMealPlan">
+                        Add Meal-Plan
+                    </button>
+                    <form name="addMealPlan" action="/addMealPlan" class="meal-plan-form" id="mealPlanForm"
+                        method="post">
+                        <label for="targetCalories">Target Protein</label>
+                        <input type="text" name="targetCalories" id="targetCalories"><br>
+                        <label for="targetProtein">Target Protein</label>
+                        <input type="text" name="targetProtein" id="targetProtein"><br>
+                        <input type="submit" name="submit" id="meal-plan-submit">
+                    </form>
+                </div>
             </div>
+
+
+            <!-- 7 day schedule -->
+            <div class="meal-days-box">
+                <h3>7 Day Schedule</h3>
+
+                <div class="meal-days" id="mealDays"></div>
+            </div>
+
+
+            <!-- Add recipe box -->
+            <div class="meal-controls-box">
+                <h3>Add Meal</h3>
+
+                <label for="mealPlanSelect">Meal Plan</label>
+                <select id="mealPlanSelect">
+                    <option value="healthy">Healthy</option>
+                    <option value="highProtein">High Protein</option>
+                    <option value="vegetarian">Vegetarian</option>
+                </select>
+
+                <label for="recipeSelect">Recipe</label>
+                <select id="recipeSelect">
+                    <option value="Chicken Salad">Chicken Salad</option>
+                    <option value="Pasta">Pasta</option>
+                    <option value="Tofu Bowl">Tofu Bowl</option>
+                </select>
+
+                <label for="mealDate">Date</label>
+                <input type="date" id="mealDate">
+
+                <button onclick="addMealToDate()">
+                    Add Meal
+                </button>
+            </div>
+
         </div>
     </div>
 
     {% include 'footer.html' %}
 
     <script src="/static/frigdeItems.js" async></script>
+    <script src="/static//mealPlans.js"></script>
+    <script src="/static//getData.js"></script>
 </body>
 
 </html>

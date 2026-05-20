@@ -150,3 +150,9 @@ FROM fridge_inventories fi
 WHERE fi.user_ID = 7;
 SELECT *
 FROM users;
+SELECT target_calories,
+    target_protein
+FROM meal_plans
+WHERE user_ID = 19;
+INSERT INTO meal_plans (user_ID, target_calories, target_protein)
+VALUES (19, 2000, 150);
