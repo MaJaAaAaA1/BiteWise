@@ -12,13 +12,34 @@
 <body>
     {% include 'nav.html' %}
 
-    <h1>Title: {{ title }}</h1><br>
-    <p>Creator: {{ creator }}</p><br>
-    <p>Time: {{ time }}</p><br>
-    <p>Instructions: {{ instructions }}</p><br>
-    <p>Ingredients: {{ ingredients }}</p><br>
-    <p>Units: {{ units }}</p><br>
-    <p>Amounts: {{ amounts }}</p><br>
+    <div class="recipe-page">
+
+        <div class="recipe-detail-card">
+
+            <h1>Title: {{ title }}</h1>
+
+            <div class="recipe-meta">
+                <p><strong>Creator:</strong> {{ creator }}</p>
+                <p><strong>Time:</strong> {{ time }}</p>
+            </div>
+
+            <div class="recipe-instructions">
+                <h3>Instructions</h3>
+                <p>{{ instructions }}</p>
+            </div>
+
+            <div class="recipe-ingredients">
+                <h3>Ingredients</h3>
+
+                <div class="ingredient-row">
+                    <span>{{ ingredients }}</span>
+                    <span>{{ amounts }}{{ units }}</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 
     {% include 'footer.html' %}
 

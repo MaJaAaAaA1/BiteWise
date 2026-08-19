@@ -117,6 +117,7 @@ def getRecipesDoable():
 @app.route("/getRecipesVegan")
 def getRecipesVegan():
     data = database.getVeganRecipes()
+    print(data)
     for i in range(0, len(data)):
         data[i] = list(data[i])
         data[i][2] = str(data[i][2])

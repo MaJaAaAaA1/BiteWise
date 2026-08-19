@@ -6,12 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BiteWise</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/home.css">
 </head>
 
 <body>
     {% include 'nav.html' %}
 
-    <h1>BiteWise</h1>
+    <section class="welcome">
+        <div class="welcome-inner">
+            <span class="welcome-eyebrow">Good to see you</span>
+            <h1>Welcome to <span>BiteWise</span></h1>
+            <p>
+                Your fridge is tracked, your meals are planned, and nothing has to go to waste.
+                Pick up where you left off — check what's expiring soon or add tonight's dinner
+                to the schedule.
+            </p>
+            <div class="welcome-actions">
+                <a href="/mypage" class="btn btn-primary">Go to My Page</a>
+                <a href="/recipes" class="btn btn-secondary">Browse Recipes</a>
+            </div>
+        </div>
+    </section>
 
     {% include 'footer.html' %}
 

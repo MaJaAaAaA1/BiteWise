@@ -1,0 +1,105 @@
+.welcome {
+    position: relative;
+    overflow: hidden;
+    padding: 56px 32px 48px;
+    background: linear-gradient(135deg, #FFF3E0 0%, #FFFFFF 60%);
+    border-bottom: 1px solid #E9E5DD;
+}
+
+.welcome::after {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: #FFA726;
+    opacity: 0.12;
+}
+
+.welcome-inner {
+    position: relative;
+    max-width: 760px;
+}
+
+.welcome-eyebrow {
+    display: inline-block;
+    background: #FFA726;
+    color: #1f1f1f;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+}
+
+.welcome h1 {
+    margin: 0 0 12px;
+    font-size: 34px;
+    line-height: 1.25;
+    font-weight: 800;
+}
+
+.welcome h1 span {
+    color: #F57C00;
+}
+
+.welcome p {
+    margin: 0 0 28px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #6B6B6B;
+    max-width: 560px;
+}
+
+.welcome-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 13px 26px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: #8BC98B;
+    color: #1f3a1f;
+}
+
+.btn-primary:hover {
+    background: #6FAE6F;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #F57C00;
+    border: 2px solid #FFA726;
+}
+
+.btn-secondary:hover {
+    background: #FFA726;
+    color: #1f1f1f;
+}
+
+
+@media (max-width: 600px) {
+    .welcome h1 {
+        font-size: 26px;
+    }
+
+    .navbar nav a {
+        margin-left: 14px;
+        font-size: 13px;
+    }
+}
