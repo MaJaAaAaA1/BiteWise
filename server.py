@@ -102,7 +102,6 @@ def getRecipes():
     for i in range(0, len(data)):
         data[i] = list(data[i])
         data[i][2] = str(data[i][2])
-    print(data[0][2])
     return jsonify(data)
 
 @app.route("/getRecipesDoable")
@@ -111,7 +110,6 @@ def getRecipesDoable():
     for i in range(0, len(data)):
         data[i] = list(data[i])
         data[i][2] = str(data[i][2])
-    print(data[0][2])
     return jsonify(data)
 
 @app.route("/getRecipesVegan")
@@ -121,7 +119,6 @@ def getRecipesVegan():
     for i in range(0, len(data)):
         data[i] = list(data[i])
         data[i][2] = str(data[i][2])
-    print(data[0][2])
     return jsonify(data)
 
 @app.route("/getFrigdeInventory")

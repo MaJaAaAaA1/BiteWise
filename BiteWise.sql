@@ -61,27 +61,31 @@ CREATE TABLE meal_plan_recipe(
     PRIMARY KEY(meal_plan_ID, recipe_ID)
 );
 INSERT INTO Users (email, first_name, last_name)
-VALUES ('anna.persson@example.com', 'Anna', 'Persson'),
+VALUES ('anna.perkins@example.com', 'Anna', 'Perkins'),
     (
-        'erik.johansson@example.com',
-        'Erik',
-        'Johansson'
+        'eric.johnson@example.com',
+        'Eric',
+        'Johnson'
     ),
-    ('karin.nilsson@example.com', 'Karin', 'Nilsson'),
-    ('lars.larsson@example.com', 'Lars', 'Larsson'),
-    ('mikael.berg@example.com', 'Mikael', 'Berg'),
-    ('sara.holm@example.com', 'Sara', 'Holm'),
-    ('oscar.lind@example.com', 'Oscar', 'Lind'),
-    ('emma.ek@example.com', 'Emma', 'Ek'),
+    ('karen.nelson@example.com', 'Karen', 'Nelson'),
     (
-        'filip.viktorsson@example.com',
-        'Filip',
-        'Viktorsson'
+        'lawrence.lawson@example.com',
+        'Lawrence',
+        'Lawson'
+    ),
+    ('michael.hill@example.com', 'Michael', 'Hill'),
+    ('sarah.holmes@example.com', 'Sarah', 'Holmes'),
+    ('oscar.lindt@example.com', 'Oscar', 'Lindt'),
+    ('emma.oakes@example.com', 'Emma', 'Oakes'),
+    (
+        'philip.victors@example.com',
+        'Philip',
+        'Victors'
     ),
     (
-        'linnea.sjoberg@example.com',
-        'Linnea',
-        'Sjöberg'
+        'linda.woods@example.com',
+        'Linda',
+        'Woods'
     );
 INSERT INTO ingredients (
         ingredient_type,
@@ -91,23 +95,23 @@ INSERT INTO ingredients (
         is_vegan,
         standard_unit
     )
-VALUES ('Mellanmjölk', 'Arla', 45, 3, FALSE, 'Liter'),
-    ('Havregryn', 'AXA', 370, 13, TRUE, 'Gram'),
-    ('Ägg', 'Kronägg', 140, 12, FALSE, 'Piece'),
+VALUES ('Whole Milk', 'Arla', 45, 3, FALSE, 'Liter'),
+    ('Oats', 'AXA', 370, 13, TRUE, 'Gram'),
+    ('Eggs', 'Kronegg', 140, 12, FALSE, 'Piece'),
     ('Tofu', 'Yipin', 120, 12, TRUE, 'Gram'),
     ('Pasta Penne', 'Barilla', 350, 12, TRUE, 'Gram'),
     (
-        'Kycklingfilé',
-        'Guldfågeln',
+        'Chicken Fillet',
+        'Goldbird',
         110,
         23,
         FALSE,
         'Gram'
     ),
-    ('Krossade tomater', 'Mutti', 20, 1, TRUE, 'Gram'),
-    ('Olivolja', 'Zeta', 880, 0, TRUE, 'Liter'),
-    ('Lök', 'ICA', 40, 1, TRUE, 'Piece'),
-    ('Röda linser', 'GoGreen', 350, 24, TRUE, 'Gram');
+    ('Crushed Tomatoes', 'Mutti', 20, 1, TRUE, 'Gram'),
+    ('Olive Oil', 'Zeta', 880, 0, TRUE, 'Liter'),
+    ('Onion', 'Fresco', 40, 1, TRUE, 'Piece'),
+    ('Red Lentils', 'GoGreen', 350, 24, TRUE, 'Gram');
 INSERT INTO fridge_inventories (user_ID, ingredient_ID, amount, best_before_date)
 VALUES (1, 1, 1, '2026-05-10'),
     (1, 3, 6, '2026-05-15'),
@@ -127,73 +131,73 @@ INSERT INTO recipes (
         prep_time
     )
 VALUES (
-        'Klassisk Havregröt',
-        'Erik J',
-        'Mormors recept',
-        'Koka gryn med vatten och salt.',
+        'Classic Oatmeal',
+        'Eric J',
+        'Grandma''s recipe',
+        'Boil oats with water and salt.',
         '00:05:00'
     ),
     (
         'Pasta Pomodoro',
         'Anna P',
-        'Italiensk kokbok',
-        'Koka pasta och blanda med tomatsås.',
+        'Italian cookbook',
+        'Boil pasta and mix with tomato sauce.',
         '00:20:00'
     ),
     (
-        'Stekt Tofu',
-        'Sara H',
-        'Veganbloggen',
-        'Pressa tofu och stek krispig.',
+        'Fried Tofu',
+        'Sarah H',
+        'The Vegan Blog',
+        'Press tofu and fry until crispy.',
         '00:15:00'
     ),
     (
-        'Stekt Ägg',
-        'Lars L',
-        'Hemkunskapen',
-        'Stek i panna med smör.',
+        'Fried Egg',
+        'Lawrence L',
+        'Home Economics',
+        'Fry in a pan with butter.',
         '00:03:00'
     ),
     (
-        'Linsgryta',
-        'Linnea S',
-        'Mat.se',
-        'Koka linser med krossade tomater.',
+        'Lentil Stew',
+        'Linda S',
+        'Food.com',
+        'Boil lentils with crushed tomatoes.',
         '00:30:00'
     ),
     (
-        'Stekt Kyckling',
+        'Fried Chicken',
         'Oscar L',
-        'Träningsguiden',
-        'Stek kyckling med olivolja.',
+        'The Training Guide',
+        'Fry chicken with olive oil.',
         '00:25:00'
     ),
     (
-        'Pasta med kyckling',
-        'Emma E',
-        'Vardagsmat',
-        'Blanda stekt kyckling med pasta.',
+        'Pasta with Chicken',
+        'Emma O',
+        'Everyday Meals',
+        'Mix fried chicken with pasta.',
         '00:35:00'
     ),
     (
-        'Omelett',
-        'Mikael B',
-        'Frukost.nu',
-        'Vispa ägg och stek på låg värme.',
+        'Omelette',
+        'Michael H',
+        'Breakfast.now',
+        'Whisk eggs and fry on low heat.',
         '00:10:00'
     ),
     (
-        'Löksoppa',
-        'Filip V',
-        'Franska köket',
-        'Fräs lök och koka upp med buljong.',
+        'Onion Soup',
+        'Philip V',
+        'The French Kitchen',
+        'Sauté onion and simmer with stock.',
         '00:45:00'
     ),
     (
-        'Enkel Tomatsås',
-        'Karin N',
-        'Familjerecept',
-        'Sjud krossade tomater med lök.',
+        'Simple Tomato Sauce',
+        'Karen N',
+        'Family Recipe',
+        'Simmer crushed tomatoes with onion.',
         '00:15:00'
     );
 INSERT INTO recipe_ingredients (recipe_ID, ingredient_ID, required_amount)
@@ -215,8 +219,14 @@ VALUES (1, 2, 50),
     -- Kyckling behöver kyckling
     (7, 5, 100),
     -- Pasta/kyckling behöver pasta
-    (7, 6, 150);
--- Pasta/kyckling behöver kyckling
+    (7, 6, 150),
+    -- Pasta/kyckling behöver kyckling
+    (8, 3, 4),
+    -- Omelette behöver ägg
+    (9, 9, 5),
+    -- Lök soppa behöver lök
+    (10, 7, 4);
+-- Tomat soppa behöver tomater
 INSERT INTO meal_plans (user_ID, target_calories, target_protein)
 VALUES (1, 2000, 120),
     (2, 2500, 150),
