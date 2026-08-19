@@ -46,23 +46,12 @@
                 <h3>Meal Plans</h3>
 
                 <div class="meal-plan-list" id="mealPlanList">
-                    <button class="meal-plan-btn">
-                        Healthy Plan
-                    </button>
-
-                    <button class="meal-plan-btn">
-                        High Protein
-                    </button>
-
-                    <button class="meal-plan-btn">
-                        Vegetarian
-                    </button>
                     <button class="meal-plan-btn add-meal-plan-btn" id="addMealPlan">
                         Add Meal-Plan
                     </button>
                     <form name="addMealPlan" action="/addMealPlan" class="meal-plan-form" id="mealPlanForm"
                         method="post">
-                        <label for="targetCalories">Target Protein</label>
+                        <label for="targetCalories">Target Calories</label>
                         <input type="text" name="targetCalories" id="targetCalories"><br>
                         <label for="targetProtein">Target Protein</label>
                         <input type="text" name="targetProtein" id="targetProtein"><br>
@@ -86,22 +75,16 @@
 
                 <label for="mealPlanSelect">Meal Plan</label>
                 <select id="mealPlanSelect">
-                    <option value="healthy">Healthy</option>
-                    <option value="highProtein">High Protein</option>
-                    <option value="vegetarian">Vegetarian</option>
                 </select>
 
                 <label for="recipeSelect">Recipe</label>
                 <select id="recipeSelect">
-                    <option value="Chicken Salad">Chicken Salad</option>
-                    <option value="Pasta">Pasta</option>
-                    <option value="Tofu Bowl">Tofu Bowl</option>
                 </select>
 
                 <label for="mealDate">Date</label>
                 <input type="date" id="mealDate">
 
-                <button onclick="addMealToDate()">
+                <button id="addMeal">
                     Add Meal
                 </button>
             </div>

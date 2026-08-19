@@ -160,3 +160,14 @@ def addMealPlan():
         return jsonify("Not enough data!")
     message = database.addMealPlan(userId, targetCalories, targetProteins)
     return redirect(url_for("mypage", userid=session['userid'][0]))
+
+@app.route("/addMeal", methods=["POST"])
+def addMeal():
+    print("Jek")
+    userId = session['userid'][0][0]
+    data = request.get_json()
+    print(data.get("mealPlan"))
+    database.addRecipeToMealPlan(data.get("mealPlan"), data.get("recipe"), data.get("date"))
+
+    #message = database.addMealPlan(userId)
+    return redirect(url_for("mypage", userid=session['userid'][0]))

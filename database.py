@@ -192,3 +192,9 @@ VALUES (%s, %s, %s);"""
         return "Completed successfully!"
     except Exception as e:
         return e
+
+def addRecipeToMealPlan(recipeId, mealPlanId, date):
+    sql = """CALL add_recipe_to_mealplan(%s, %s, "%s");"""
+    value = (recipeId, mealPlanId, date)
+    mycursor.execute(sql, value)
+    mycursor.commit()

@@ -156,3 +156,7 @@ FROM meal_plans
 WHERE user_ID = 19;
 INSERT INTO meal_plans (user_ID, target_calories, target_protein)
 VALUES (19, 2000, 150);
+SELECT *
+FROM meal_plan_recipe;
+CALL add_recipe_to_mealplan(2, 3, "2026-06-06");
+SHOW PROCEDURE STATUS;
