@@ -123,7 +123,7 @@ def getVeganRecipes():
     return mycursor.fetchall()
 
 def getAllMealPlans(user_id):
-    sql = """SELECT target_calories, target_protein 
+    sql = """SELECT target_calories, target_protein, meal_plan_ID
     FROM meal_plans
     WHERE user_ID = %s;"""
     value = (user_id,)
@@ -193,8 +193,17 @@ VALUES (%s, %s, %s);"""
     except Exception as e:
         return e
 
-def addRecipeToMealPlan(recipeId, mealPlanId, date):
-    sql = """CALL add_recipe_to_mealplan(%s, %s, "%s");"""
-    value = (recipeId, mealPlanId, date)
-    mycursor.execute(sql, value)
-    mycursor.commit()
+
+
+
+def addRecipeToMealPlan(mealPlanId, recipeId, day):
+    print(mealPlanId, recipeId, day)
+    sql = """CALL add_recipe_to_mealplan(%s, %s, %s);"""
+    value = (mealPlanId, recipeId, day)
+    try:
+        mycursor.execute(sql, value)
+        mydb.commit()
+    except Exception as e:
+        return e
+    
+

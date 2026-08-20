@@ -51,6 +51,7 @@ def recipe():
 # MyPage route
 @app.route("/mypage")
 def mypage():
+    print(session)
     if not request.args.get('userid'):
         return redirect(f"/mypage?userid={session['userid'][0][0]}")
     return render_template("mypage.html")
@@ -80,6 +81,7 @@ def register():
             if request.form['email'] and request.form['fname'] and request.form['lname']:
                 database.addUser(request.form['email'], request.form['fname'], request.form['lname'])
                 session['email'] = request.form['email'] # Add user to session
+                session['userid'] = database.getUserIdByEmail(request.form['email'])
                 return redirect(url_for("home")) # Send to defualt page for login
         
     return render_template("register.html")
@@ -157,6 +159,7 @@ def addMealPlan():
     except:
         return jsonify("Not enough data!")
     message = database.addMealPlan(userId, targetCalories, targetProteins)
+    print(message)
     return redirect(url_for("mypage", userid=session['userid'][0]))
 
 @app.route("/addMeal", methods=["POST"])
@@ -164,8 +167,6 @@ def addMeal():
     print("Jek")
     userId = session['userid'][0][0]
     data = request.get_json()
-    print(data.get("mealPlan"))
-    database.addRecipeToMealPlan(data.get("mealPlan"), data.get("recipe"), data.get("date"))
-
-    #message = database.addMealPlan(userId)
+    message = database.addRecipeToMealPlan(data.get("mealPlan"), data.get("recipe"), data.get("day"))
+    print(message)
     return redirect(url_for("mypage", userid=session['userid'][0]))

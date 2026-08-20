@@ -25,7 +25,7 @@ const getData = async () => {
     .then((response) => response.json())
     .then((data) => {
       data.forEach((e) => {
-        createMealPlansBoxes(e[0], e[1])
+        createMealPlansBoxes(e[0], e[1], e[2])
       })
     })
 
@@ -33,7 +33,8 @@ const getData = async () => {
     .then((response) => response.json())
     .then((data) => {
       data.forEach((e) => {
-        createRecipeList(e[0])
+        console.log(e)
+        createRecipeList(e[0], e[3])
       })
     })
 }
@@ -96,7 +97,7 @@ const createIngredientsRadio = (radioDiv, ingredientId, ingredientType) => {
   radioDiv.appendChild(document.createElement("br"))
 }
 
-const createMealPlansBoxes = (mealPlanCalories, mealPlanProteins) => {
+const createMealPlansBoxes = (mealPlanCalories, mealPlanProteins, mealPlanID) => {
   const mealBox = document.getElementById("mealPlanList")
   const mealPlanOption = document.getElementById("mealPlanSelect")
 
@@ -108,18 +109,18 @@ const createMealPlansBoxes = (mealPlanCalories, mealPlanProteins) => {
   })
 
   const mealOption = document.createElement("option")
-  mealOption.value = mealPlanCalories + " : " + mealPlanProteins
+  mealOption.value = mealPlanID
   mealOption.innerHTML = mealPlanCalories + " : " + mealPlanProteins
 
   mealBox.appendChild(mealItem)
   mealPlanOption.appendChild(mealOption)
 }
 
-const createRecipeList = (recipeName) => {
+const createRecipeList = (recipeName, recipeID) => {
   const recipeOption = document.getElementById("recipeSelect")
 
   const option = document.createElement("option")
-  option.value = recipeName
+  option.value = recipeID
   option.innerHTML = recipeName
 
   recipeOption.appendChild(option)
@@ -129,17 +130,18 @@ const updateScheduleBox = () => {}
 
 document.getElementById("addMeal").addEventListener("click", () => {
   var mealPlan = document.getElementById("mealPlanSelect")
-  mealPlan = mealPlan.options[mealPlan.selectedIndex].text
+  mealPlan = mealPlan.options[mealPlan.selectedIndex].value
   var recipe = document.getElementById("recipeSelect")
-  recipe = recipe.options[recipe.selectedIndex].text
-  var date = document.getElementById("mealDate").value
+  recipe = recipe.options[recipe.selectedIndex].value
+  var day = document.getElementById("daySelect")
+  day = day.options[day.selectedIndex].text
 
   fetch("/addMeal", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ mealPlan: mealPlan, recipe: recipe, date: date }),
+    body: JSON.stringify({ mealPlan: mealPlan, recipe: recipe, day: day }),
   })
 })
 
