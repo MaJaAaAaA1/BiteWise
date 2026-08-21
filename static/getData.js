@@ -33,9 +33,73 @@ const getData = async () => {
     .then((response) => response.json())
     .then((data) => {
       data.forEach((e) => {
-        console.log(e)
         createRecipeList(e[0], e[3])
       })
+    })
+
+  await fetch("/getWeeklySchedule")
+    .then((response) => response.json())
+    .then((data) => {
+      // day, name, calories, protein, totalcalories, totalprotein
+
+      const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ]
+
+      var totalCalories = 0
+      var totalProtein = 0
+      var counter = 0
+
+      // Fill days with recipes and empty days between
+      for (let i = 0; i < data[0].length; i++) {
+        // Get overall data from first day with recipe
+
+        var recipeName = data[0][i][2]
+        var calories = data[1][i][0][0]
+        var protein = data[1][i][0][1]
+        totalCalories += parseInt(calories)
+        totalProtein += parseInt(protein)
+        // Iterate trough and create empty boxes if day does not match.
+        // Also keeping track of what day it's on and break out when day is found
+        // to get next day with recipe data
+
+        for (let x = counter; x < 7; x++) {
+          if (data[0][i][1] != days[x]) {
+            createScheduelBoxes(days[x], "", 0, 0)
+            counter++
+          } else {
+            createScheduelBoxes(
+              days[x],
+              recipeName,
+              Math.round(parseInt(calories)),
+              Math.round(parseInt(protein)),
+            )
+            counter++
+            break
+          }
+        }
+      }
+
+      // Fill rest of boxes
+      for (let i = counter; i < 7; i++) {
+        createScheduelBoxes(days[i], "", 0, 0)
+      }
+
+      var targetCalories = data[0][0][3]
+      var targetProtein = data[0][0][4]
+
+      updateTotalCaloriesProteinValue(
+        Math.round(parseInt(totalCalories)),
+        Math.round(parseInt(totalProtein)),
+        targetCalories,
+        targetProtein,
+      )
     })
 }
 
@@ -97,7 +161,11 @@ const createIngredientsRadio = (radioDiv, ingredientId, ingredientType) => {
   radioDiv.appendChild(document.createElement("br"))
 }
 
-const createMealPlansBoxes = (mealPlanCalories, mealPlanProteins, mealPlanID) => {
+const createMealPlansBoxes = (
+  mealPlanCalories,
+  mealPlanProteins,
+  mealPlanID,
+) => {
   const mealBox = document.getElementById("mealPlanList")
   const mealPlanOption = document.getElementById("mealPlanSelect")
 

@@ -23,13 +23,14 @@ def badRecipe(user):
         AND fi.user_ID = {user};""")
     return mycursor.fetchall()
 
-def calculateNutrients():
-    mycursor.execute("""SELECT ri.recipe_ID,
-        SUM(i.kcal_per_100g / 100 * ri.required_amount),
+def calculateNutrients(recipeID):
+    sql = ("""SELECT SUM(i.kcal_per_100g / 100 * ri.required_amount),
         SUM(i.protein_per_100g / 100 * ri.required_amount)
     FROM recipe_ingredients ri
         INNER JOIN ingredients i ON ri.ingredient_ID = i.ingredient_ID
-    GROUP BY ri.recipe_ID;""")
+    WHERE recipe_ID = %s;""")
+    values = (recipeID,)
+    mycursor.execute(sql, values)
     return mycursor.fetchall()
 
 def unavailableRecipes(user):
@@ -193,11 +194,7 @@ VALUES (%s, %s, %s);"""
     except Exception as e:
         return e
 
-
-
-
 def addRecipeToMealPlan(mealPlanId, recipeId, day):
-    print(mealPlanId, recipeId, day)
     sql = """CALL add_recipe_to_mealplan(%s, %s, %s);"""
     value = (mealPlanId, recipeId, day)
     try:
@@ -206,4 +203,16 @@ def addRecipeToMealPlan(mealPlanId, recipeId, day):
     except Exception as e:
         return e
     
-
+def GetAllRecipesInMealPlan(mealPlanID):
+    sql = """SELECT mpr.recipe_ID, mpr.weekDay, r.title, mp.target_calories, mp.target_protein
+            FROM meal_plan_recipe mpr
+            INNER JOIN recipes r ON mpr.recipe_ID = r.recipe_ID
+            INNER JOIN meal_plans mp ON mpr.meal_plan_ID = mp.meal_plan_ID
+            WHERE mpr.meal_plan_ID = %s
+            ORDER BY FIELD(mpr.weekDay, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');"""
+    value = (mealPlanID,)
+    try:
+        mycursor.execute(sql, value)
+        return mycursor.fetchall()
+    except Exception as e:
+        return e

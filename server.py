@@ -164,9 +164,19 @@ def addMealPlan():
 
 @app.route("/addMeal", methods=["POST"])
 def addMeal():
-    print("Jek")
     userId = session['userid'][0][0]
     data = request.get_json()
     message = database.addRecipeToMealPlan(data.get("mealPlan"), data.get("recipe"), data.get("day"))
     print(message)
     return redirect(url_for("mypage", userid=session['userid'][0]))
+
+@app.route("/getWeeklySchedule")
+def getWeeklySchedule():
+
+    data = []
+    nutrients = []
+    data.append(database.GetAllRecipesInMealPlan(11))
+    for e in data[0]:
+        nutrients.append(database.calculateNutrients(e[0]))
+    data.append(nutrients)
+    return jsonify(data)

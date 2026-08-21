@@ -61,131 +61,7 @@
             <!-- 7 day schedule -->
             <div class="meal-days-box">
                 <h3>7 Day Schedule</h3>
-                <div class="meal-days">
-
-                    <div class="day-card">
-                        <div class="day-title">Monday</div>
-
-                        <div class="recipe-list">
-                            <div class="recipe-item">
-                                <div class="recipe-name">
-                                    Chicken Rice Bowl
-                                </div>
-
-                                <div class="recipe-nutrition">
-                                    <span>650 kcal</span>
-                                    <span>42g protein</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="day-card">
-                        <div class="day-title">Tuesday</div>
-
-                        <div class="recipe-list">
-                            <div class="recipe-item">
-                                <div class="recipe-name">
-                                    Salmon & Potatoes
-                                </div>
-
-                                <div class="recipe-nutrition">
-                                    <span>720 kcal</span>
-                                    <span>48g protein</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="day-card">
-                        <div class="day-title">Wednesday</div>
-
-                        <div class="recipe-list">
-                            <div class="recipe-item">
-                                <div class="recipe-name">
-                                    Salmon & Potatoes
-                                </div>
-
-                                <div class="recipe-nutrition">
-                                    <span>720 kcal</span>
-                                    <span>48g protein</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="day-card">
-                        <div class="day-title">Thursday</div>
-
-                        <div class="recipe-list">
-                            <div class="recipe-item">
-                                <div class="recipe-name">
-                                    Salmon & Potatoes
-                                </div>
-
-                                <div class="recipe-nutrition">
-                                    <span>720 kcal</span>
-                                    <span>48g protein</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="day-card">
-                        <div class="day-title">Friday</div>
-
-                        <div class="recipe-list">
-                            <div class="recipe-item">
-                                <div class="recipe-name">
-                                    Salmon & Potatoes
-                                </div>
-
-                                <div class="recipe-nutrition">
-                                    <span>720 kcal</span>
-                                    <span>48g protein</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="day-card">
-                        <div class="day-title">Saturday</div>
-
-                        <div class="recipe-list">
-                            <div class="recipe-item">
-                                <div class="recipe-name">
-                                    Salmon & Potatoes
-                                </div>
-
-                                <div class="recipe-nutrition">
-                                    <span>720 kcal</span>
-                                    <span>48g protein</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="day-card">
-                        <div class="day-title">Sunday</div>
-
-                        <div class="recipe-list">
-                            <div class="recipe-item">
-                                <div class="recipe-name">
-                                    Salmon & Potatoes
-                                </div>
-
-                                <div class="recipe-nutrition">
-                                    <span>720 kcal</span>
-                                    <span>48g protein</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Wednesday ... Sunday -->
-
-                </div>
+                <div class="meal-days" id="mealDays"></div>
 
 
                 <!-- ONE total for the schedule -->
@@ -197,7 +73,7 @@
                             Calories
                         </span>
 
-                        <span class="meal-week-total-value">
+                        <span class="meal-week-total-value" id="totalCalories">
                             1800 / 2000 kcal
                         </span>
                     </div>
@@ -207,7 +83,7 @@
                             Protein
                         </span>
 
-                        <span class="meal-week-total-value">
+                        <span class="meal-week-total-value" id="totalProtein">
                             122 / 150 g
                         </span>
                     </div>
@@ -250,8 +126,8 @@
 
     {% include 'footer.html' %}
 
+    <script src="/static//mealPlans.js" async></script>
     <script src="/static/frigdeItems.js" async></script>
-    <script src="/static//mealPlans.js"></script>
     <script src="/static//getData.js"></script>
 </body>
 
