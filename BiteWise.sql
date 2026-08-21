@@ -52,13 +52,15 @@ CREATE TABLE meal_plans(
     FOREIGN KEY (user_ID) REFERENCES users(user_ID),
     PRIMARY KEY (meal_plan_ID)
 );
+
 CREATE TABLE meal_plan_recipe(
     meal_plan_ID INT,
     recipe_ID INT,
-    planned_date DATE NOT NULL,
+    weekDay VARCHAR(255) NOT NULL,
     FOREIGN KEY(meal_plan_ID) REFERENCES meal_plans(meal_plan_ID),
     FOREIGN KEY(recipe_ID) REFERENCES recipes(recipe_ID),
-    PRIMARY KEY(meal_plan_ID, recipe_ID)
+    PRIMARY KEY(meal_plan_ID, recipe_ID, weekDay)
+
 );
 INSERT INTO Users (email, first_name, last_name)
 VALUES ('anna.perkins@example.com', 'Anna', 'Perkins'),
@@ -238,14 +240,19 @@ VALUES (1, 2000, 120),
     (8, 2100, 110),
     (9, 2800, 160),
     (10, 1900, 90);
-INSERT INTO meal_plan_recipe (meal_plan_ID, recipe_ID, planned_date)
-VALUES (1, 1, '2026-05-01'),
-    (1, 2, '2026-05-01'),
-    (2, 6, '2026-05-02'),
-    (3, 3, '2026-05-02'),
-    (4, 7, '2026-05-03'),
-    (5, 5, '2026-05-03'),
-    (6, 10, '2026-05-04'),
-    (7, 8, '2026-05-04'),
-    (8, 9, '2026-05-05'),
-    (9, 6, '2026-05-05');
+INSERT INTO meal_plan_recipe (meal_plan_ID, recipe_ID, weekDay)
+VALUES (1, 1, 'Monday'),
+    (1, 2, 'Tuesday'),
+    (2, 6, 'Wednesday'),
+    (3, 3, 'Thursday'),
+    (4, 7, 'Friday'),
+    (5, 5, 'Saturday'),
+    (6, 10, 'Sunday'),
+    (7, 8, 'Monday'),
+    (8, 9, 'Tuesday'),
+    (9, 6, 'Wednesday');
+
+
+
+
+
