@@ -14,13 +14,14 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 def badRecipe(user):
-    mycursor.execute(f"""SELECT DISTINCT ri.recipe_ID,
+    sql = """SELECT DISTINCT ri.recipe_ID,
         r.title
     FROM fridge_inventories fi
         INNER JOIN recipe_ingredients ri ON ri.ingredient_ID = fi.ingredient_ID
         INNER JOIN recipes r ON r.recipe_ID = ri.recipe_ID
     WHERE fi.best_before_date BETWEEN CURRENT_DATE() AND CURRENT_DATE() + 2
-        AND fi.user_ID = {user};""")
+        AND fi.user_ID = %s;"""
+    mycursor.execute(sql, (user,))
     return mycursor.fetchall()
 
 def calculateNutrients(recipeID):
@@ -34,11 +35,12 @@ def calculateNutrients(recipeID):
     return mycursor.fetchall()
 
 def unavailableRecipes(user):
-    mycursor.execute(f"""SELECT DISTINCT *
+    sql = """SELECT DISTINCT *
 FROM recipe_ingredients ri
     LEFT JOIN fridge_inventories fi ON ri.ingredient_ID = fi.ingredient_ID
 WHERE fi.ingredient_ID IS NULL
-    AND fi.user_ID = {user};""")
+    AND fi.user_ID = %s;"""
+    mycursor.execute(sql, (user,))
     return mycursor.fetchall()
 
 # Compares fridgeinventory with recipe to make shoppinglist --
@@ -79,7 +81,7 @@ def checkDailyMacros(user_id, planned_date):
     GROUP BY mpr.planned_date, mp.target_calories, mp.target_protein;"""
     mycursor.execute(sql, (user_id, planned_date))
 
-# filter vegan recipes
+# Shows all recipes
 def getAllRecipes():
     sql = """SELECT title,
     recipe_creator,
@@ -123,6 +125,7 @@ def getVeganRecipes():
     mycursor.execute(sql)
     return mycursor.fetchall()
 
+# Shows users mealplans
 def getAllMealPlans(user_id):
     sql = """SELECT target_calories, target_protein, meal_plan_ID
     FROM meal_plans
@@ -131,19 +134,24 @@ def getAllMealPlans(user_id):
     mycursor.execute(sql, value)
     return mycursor.fetchall()
 
+# Checks if user has an account
 def doesUserExist(email):
-    mycursor.execute(f"""SELECT EXISTS(
+    sql = """SELECT EXISTS(
         SELECT 1
         FROM Users
-        WHERE Users.email = '{email}'
-    )""")
+        WHERE Users.email = %s
+    )"""
+    mycursor.execute(sql, (email,))
     return mycursor.fetchall()[0][0]
 
+# Adds a user
 def addUser(email, fname, lname):
-    mycursor.execute(f"""INSERT INTO Users (email, first_name, last_name)
-                        VALUES ("{email}", "{fname}", "{lname}");""")
+    sql = """INSERT INTO Users (email, first_name, last_name)
+                        VALUES (%s, %s, %s);"""
+    mycursor.execute(sql, (email, fname, lname))
     mydb.commit()
 
+# adds ingredient to user's fridge inventory
 def addIngredientToFridge(user_id, ingredient_id, amount, best_before_date):
     sql = """INSERT INTO fridge_inventories (user_ID, ingredient_ID, amount, best_before_date)
         VALUES (%s, %s, %s, %s)"""
@@ -155,7 +163,7 @@ def addIngredientToFridge(user_id, ingredient_id, amount, best_before_date):
     except Exception as e:
         return e
     
-
+# Gets users fridge inventory
 def getFridgeInventoryById(user_id):
     sql = """SELECT i.ingredient_type,
     i.standard_unit,
@@ -168,6 +176,7 @@ def getFridgeInventoryById(user_id):
     mycursor.execute(sql, value)
     return mycursor.fetchall()
 
+# Shows all ingredients
 def getAllIngredients():
     sql = """SELECT ingredient_ID,
     ingredient_type
@@ -175,6 +184,7 @@ def getAllIngredients():
     mycursor.execute(sql)
     return mycursor.fetchall()
 
+# gets the user id by users email address
 def getUserIdByEmail(email):
     sql = """SELECT user_ID
     FROM users
@@ -183,6 +193,7 @@ def getUserIdByEmail(email):
     mycursor.execute(sql, value)
     return mycursor.fetchall()
 
+# adds a mealplan with prefered macros
 def addMealPlan(user_id, targetCalories, targetProteins):
     sql = """INSERT INTO meal_plans (user_ID, target_calories, target_protein)
 VALUES (%s, %s, %s);"""
@@ -194,6 +205,7 @@ VALUES (%s, %s, %s);"""
     except Exception as e:
         return e
 
+# Calls procedure add recipe to mealplan
 def addRecipeToMealPlan(mealPlanId, recipeId, day):
     sql = """CALL add_recipe_to_mealplan(%s, %s, %s);"""
     value = (mealPlanId, recipeId, day)
@@ -202,7 +214,8 @@ def addRecipeToMealPlan(mealPlanId, recipeId, day):
         mydb.commit()
     except Exception as e:
         return e
-    
+
+# Gets all recipes in a mealplan
 def GetAllRecipesInMealPlan(mealPlanID):
     sql = """SELECT mpr.recipe_ID, mpr.weekDay, r.title, mp.target_calories, mp.target_protein
             FROM meal_plan_recipe mpr
