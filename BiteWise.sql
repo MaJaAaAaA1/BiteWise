@@ -52,7 +52,6 @@ CREATE TABLE meal_plans(
     FOREIGN KEY (user_ID) REFERENCES users(user_ID),
     PRIMARY KEY (meal_plan_ID)
 );
-
 CREATE TABLE meal_plan_recipe(
     meal_plan_ID INT,
     recipe_ID INT,
@@ -60,7 +59,6 @@ CREATE TABLE meal_plan_recipe(
     FOREIGN KEY(meal_plan_ID) REFERENCES meal_plans(meal_plan_ID),
     FOREIGN KEY(recipe_ID) REFERENCES recipes(recipe_ID),
     PRIMARY KEY(meal_plan_ID, recipe_ID, weekDay)
-
 );
 INSERT INTO Users (email, first_name, last_name)
 VALUES ('anna.perkins@example.com', 'Anna', 'Perkins'),
@@ -251,8 +249,29 @@ VALUES (1, 1, 'Monday'),
     (7, 8, 'Monday'),
     (8, 9, 'Tuesday'),
     (9, 6, 'Wednesday');
-
-
-
-
-
+DELIMITER && CREATE PROCEDURE add_recipe_to_mealplan(
+    IN p_meal_plan_id INT,
+    IN p_recipe_id INT,
+    IN p_weekDay VARCHAR(255)
+) BEGIN IF NOT EXISTS (
+    SELECT 1
+    FROM meal_plans
+    WHERE meal_plan_ID = p_meal_plan_id
+) THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Meal plan does not exist';
+END IF;
+IF NOT EXISTS (
+    SELECT 1
+    FROM recipes
+    WHERE recipe_ID = p_recipe_id
+) THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Recipe does not exist';
+END IF;
+INSERT INTO meal_plan_recipe (meal_plan_ID, recipe_ID, weekDay)
+VALUES (p_meal_plan_id, p_recipe_id, p_weekDay);
+END && DELIMITER;
+CREATE TRIGGER check_best_before_date BEFORE
+INSERT ON fridge_inventories FOR EACH ROW BEGIN IF NEW.best_before_date < CURDATE() THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = "Best before date already passed!";
+END IF;
+END;

@@ -1,7 +1,7 @@
 import database
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, url_for, request, redirect, session, jsonify
+from flask import Flask, render_template, url_for, request, redirect, session, jsonify, flash
 
 load_dotenv()
 app = Flask(__name__)
@@ -45,7 +45,14 @@ def recipes():
 def recipe():
     if int(request.args.get("recipeid")):
         data = database.getRecipeById(int(request.args.get("recipeid")))
-        return render_template("recipe.html", title=data[0][0], creator=data[0][1], time=data[0][2], instructions=data[0][3], ingredients=data[0][4], units=data[0][5], amounts=data[0][6])
+
+        ingredient_list = [i.strip() for i in data[0][4].split(',')]
+        amount_list = [a.strip() for a in data[0][5].split(',')]
+        unit_list = [u.strip() for u in data[0][6].split(',')]
+
+        rows = zip(ingredient_list, amount_list, unit_list)
+
+        return render_template("recipe.html", title=data[0][0], creator=data[0][1], time=data[0][2], instructions=data[0][3], rows=rows)
     return redirect(url_for("recipes"))
 
 # MyPage route
@@ -143,6 +150,8 @@ def addIngredient():
     except:
         return jsonify("Not enough data!")
     message = database.addIngredientToFridge(userId, ingredientId, amount, bestBeforeDate)
+    if message[0]:
+        flash(str(message[1]).split(':', 1)[1])
     return redirect(url_for("mypage", userid=session['userid'][0]))
 
 @app.route("/getMealPlans")
@@ -170,12 +179,14 @@ def addMeal():
     print(message)
     return redirect(url_for("mypage", userid=session['userid'][0]))
 
-@app.route("/getWeeklySchedule")
+@app.route("/getWeeklySchedule", methods=["POST"])
 def getWeeklySchedule():
+
+    requestData = request.get_json()
 
     data = []
     nutrients = []
-    data.append(database.GetAllRecipesInMealPlan(11))
+    data.append(database.GetAllRecipesInMealPlan(requestData.get("mealPlanID")))
     for e in data[0]:
         nutrients.append(database.calculateNutrients(e[0]))
     data.append(nutrients)

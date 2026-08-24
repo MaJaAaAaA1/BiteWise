@@ -66,8 +66,6 @@ def getCookableRecipes(user_id):
     mycursor.execute(sql, (user_id))
     return mycursor.fetchall()
 
-
-# daily check for makro goal
 def checkDailyMacros(user_id, planned_date):
     sql = """SELECT mpr.planned_date, mp.target_calories,
     SUM(i.kcal_per_100g * ri.required_amount / 100) AS planned_calories, mp.target_protein,
@@ -81,7 +79,6 @@ def checkDailyMacros(user_id, planned_date):
     GROUP BY mpr.planned_date, mp.target_calories, mp.target_protein;"""
     mycursor.execute(sql, (user_id, planned_date))
 
-# Shows all recipes
 def getAllRecipes():
     sql = """SELECT title,
     recipe_creator,
@@ -91,7 +88,6 @@ def getAllRecipes():
     mycursor.execute(sql)
     return mycursor.fetchall()
 
-# Check this query
 def getRecipeById(recipeID):
     sql = """SELECT r.title,
     r.recipe_creator,
@@ -159,9 +155,9 @@ def addIngredientToFridge(user_id, ingredient_id, amount, best_before_date):
     try:
         mycursor.execute(sql, values)
         mydb.commit()
-        return "Completed successfully!"
+        return [0, "Completed successfully!"]
     except Exception as e:
-        return e
+        return [1, e]
     
 # Gets users fridge inventory
 def getFridgeInventoryById(user_id):

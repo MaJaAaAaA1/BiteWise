@@ -14,6 +14,14 @@
     {% include 'nav.html' %}
 
     <div class="mypage-grid">
+        {% with messages = get_flashed_messages()%}
+        {% if messages%}
+        {% for message in messages%}
+        <p class="error-message">{{message}}</p>
+        {%endfor%}
+        {%endif%}
+        {%endwith%}
+
         <div class="fridge-box">
             <div class="fridge-list">
                 <h3>Fridge Items:</h3>
@@ -74,7 +82,6 @@
                         </span>
 
                         <span class="meal-week-total-value" id="totalCalories">
-                            1800 / 2000 kcal
                         </span>
                     </div>
 
@@ -84,7 +91,6 @@
                         </span>
 
                         <span class="meal-week-total-value" id="totalProtein">
-                            122 / 150 g
                         </span>
                     </div>
 
@@ -127,7 +133,6 @@
     {% include 'footer.html' %}
 
     <script src="/static//mealPlans.js" async></script>
-    <script src="/static/frigdeItems.js" async></script>
     <script src="/static//getData.js"></script>
 </body>
 

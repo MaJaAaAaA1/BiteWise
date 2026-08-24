@@ -37,7 +37,14 @@ const getData = async () => {
       })
     })
 
-  await fetch("/getWeeklySchedule")
+  var mealPlanID = document.getElementById("mealPlanBtn").value
+  await fetch("/getWeeklySchedule", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ mealPlanID: mealPlanID }),
+  })
     .then((response) => response.json())
     .then((data) => {
       // day, name, calories, protein, totalcalories, totalprotein
@@ -171,9 +178,11 @@ const createMealPlansBoxes = (
 
   const mealItem = document.createElement("button")
   mealItem.classList.add("meal-plan-btn")
+  mealItem.id = "mealPlanBtn"
   mealItem.innerHTML = mealPlanCalories + " : " + mealPlanProteins
-  mealItem.addEventListener("click", () => {
-    updateScheduleBox()
+  mealItem.value = mealPlanID
+  mealItem.addEventListener("click", (e) => {
+    updateScheduleBox(e.srcElement.value)
   })
 
   const mealOption = document.createElement("option")
@@ -194,7 +203,84 @@ const createRecipeList = (recipeName, recipeID) => {
   recipeOption.appendChild(option)
 }
 
-const updateScheduleBox = () => {}
+const updateScheduleBox = async (mealPlanID) => {
+  document.getElementById("mealDays").innerHTML = ""
+  await fetch("/getWeeklySchedule", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ mealPlanID: mealPlanID }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // day, name, calories, protein, totalcalories, totalprotein
+
+      const days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ]
+
+      var totalCalories = 0
+      var totalProtein = 0
+      var counter = 0
+
+      // Fill days with recipes and empty days between
+      for (let i = 0; i < data[0].length; i++) {
+        // Get overall data from first day with recipe
+
+        var recipeName = data[0][i][2]
+        var calories = data[1][i][0][0]
+        var protein = data[1][i][0][1]
+        totalCalories += parseInt(calories)
+        totalProtein += parseInt(protein)
+        // Iterate trough and create empty boxes if day does not match.
+        // Also keeping track of what day it's on and break out when day is found
+        // to get next day with recipe data
+
+        for (let x = counter; x < 7; x++) {
+          if (data[0][i][1] != days[x]) {
+            createScheduelBoxes(days[x], "", 0, 0)
+            counter++
+          } else {
+            createScheduelBoxes(
+              days[x],
+              recipeName,
+              Math.round(parseInt(calories)),
+              Math.round(parseInt(protein)),
+            )
+            counter++
+            break
+          }
+        }
+      }
+
+      // Fill rest of boxes
+      for (let i = counter; i < 7; i++) {
+        createScheduelBoxes(days[i], "", 0, 0)
+      }
+
+      if (data[0].length > 0) {
+        var targetCalories = data[0][0][3]
+        var targetProtein = data[0][0][4]
+      } else {
+        var targetCalories = 0
+        var targetProtein = 0
+      }
+
+      updateTotalCaloriesProteinValue(
+        Math.round(parseInt(totalCalories)),
+        Math.round(parseInt(totalProtein)),
+        targetCalories,
+        targetProtein,
+      )
+    })
+}
 
 document.getElementById("addMeal").addEventListener("click", () => {
   var mealPlan = document.getElementById("mealPlanSelect")
@@ -211,6 +297,8 @@ document.getElementById("addMeal").addEventListener("click", () => {
     },
     body: JSON.stringify({ mealPlan: mealPlan, recipe: recipe, day: day }),
   })
+
+  location.reload()
 })
 
 getData()

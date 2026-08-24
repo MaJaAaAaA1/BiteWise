@@ -31,10 +31,12 @@
             <div class="recipe-ingredients">
                 <h3>Ingredients</h3>
 
+                {% for ingredient, amount, unit in rows %}
                 <div class="ingredient-row">
-                    <span>{{ ingredients }}</span>
-                    <span>{{ amounts }}{{ units }}</span>
+                    <span>{{ ingredient }}</span>
+                    <span>{{ unit }} {{ amount }}</span>
                 </div>
+                {% endfor %}
             </div>
 
         </div>

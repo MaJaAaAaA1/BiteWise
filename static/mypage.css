@@ -400,3 +400,8 @@
 .meal-controls-box button {
     padding: 12px;
 }
+
+.error-message {
+    color: red;
+    margin: auto;
+}
